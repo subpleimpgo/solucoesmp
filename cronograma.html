@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programação de Apresentações — ENASTIC MP 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#050d1a; --surface:#0b1628; --card:#0e1f38; --card-hover:#122545;
+    --border:#1a3260; --accent:#00e5a0; --accent2:#3b82f6; --text:#e2e8f0; --muted:#64748b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* HEADER */
+  .header{
+    background:linear-gradient(135deg,#050d1a 0%,#0a1e3d 50%,#05122a 100%);
+    border-bottom:1px solid var(--border);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden;
+  }
+  .header::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(0,229,160,.05) 0%,transparent 70%),
+               radial-gradient(ellipse 40% 60% at 20% 30%,rgba(59,130,246,.06) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .header-inner{max-width:1400px;margin:0 auto;position:relative}
+  .header-badge{
+    display:inline-flex;align-items:center;gap:.5rem;
+    background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);
+    border-radius:999px;padding:.3rem 1rem;font-family:'DM Mono',monospace;
+    font-size:.7rem;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;
+  }
+  .header-badge span{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .header h1{
+    font-family:'Sora',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);font-weight:800;
+    line-height:1.1;letter-spacing:-.02em;color:#fff;margin-bottom:.5rem;
+  }
+  .header h1 em{
+    font-style:normal;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .header-sub{font-size:.95rem;color:var(--muted);display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:.6rem}
+  .dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
+
+  /* STATS */
+  .stats-bar{background:var(--surface);border-bottom:1px solid var(--border)}
+  .stats-inner{max-width:1400px;margin:0 auto;padding:1.25rem 2rem;display:flex;gap:2.5rem;flex-wrap:wrap;align-items:center}
+  .stat{display:flex;align-items:baseline;gap:.5rem}
+  .stat-num{font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1}
+  .stat-label{font-size:.8rem;color:var(--muted);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+  .stats-divider{width:1px;height:2rem;background:var(--border)}
+
+  /* MAIN */
+  .main{max-width:1400px;margin:0 auto;padding:2rem}
+
+  /* FILTERS */
+  .filters-bar{
+    display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;
+    margin-bottom:1.5rem;
+  }
+  .filter-label{
+    font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-right:.25rem;
+  }
+  .filter-btn{
+    display:inline-flex;align-items:center;gap:.4rem;
+    padding:.35rem .8rem;border-radius:7px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);font-size:.78rem;
+    font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;
+  }
+  .filter-btn:hover{background:var(--card);color:var(--text)}
+  .filter-btn.active{background:rgba(0,229,160,.1);color:var(--accent);border-color:rgba(0,229,160,.3)}
+  .filter-dot{width:7px;height:7px;border-radius:50%}
+
+  /* DROPDOWN */
+  .select-wrap{position:relative;display:inline-flex;align-items:center}
+  .select-wrap::after{
+    content:'▾';position:absolute;right:.75rem;pointer-events:none;
+    color:var(--muted);font-size:.75rem;
+  }
+  .filter-select{
+    appearance:none;-webkit-appearance:none;
+    padding:.38rem 2.2rem .38rem .85rem;
+    border-radius:7px;border:1px solid var(--border);
+    background:var(--surface);color:var(--text);
+    font-size:.78rem;font-family:'DM Sans',sans-serif;
+    cursor:pointer;outline:none;transition:border-color .2s;
+    min-width:160px;
+  }
+  .filter-select:hover{background:var(--card)}
+  .filter-select:focus{border-color:var(--accent)}
+
+  /* SEARCH */
+  .search-wrap{flex:1;min-width:200px;max-width:320px;margin-left:auto}
+  .search-box{
+    width:100%;background:var(--card);border:1px solid var(--border);
+    border-radius:8px;padding:.5rem .9rem;color:var(--text);
+    font-size:.875rem;font-family:inherit;outline:none;transition:border-color .2s;
+  }
+  .search-box::placeholder{color:var(--muted)}
+  .search-box:focus{border-color:var(--accent)}
+
+  /* TABLE CONTAINER */
+  .table-wrap{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+  }
+
+  table{width:100%;border-collapse:collapse;font-size:.84rem}
+
+  /* THEAD */
+  thead tr{background:var(--card);border-bottom:2px solid var(--border)}
+  thead th{
+    padding:1rem 1.1rem;
+    font-family:'DM Mono',monospace;font-size:.62rem;font-weight:500;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    text-align:left;white-space:nowrap;
+  }
+  thead th.th-accent{color:var(--accent)}
+
+  /* DATE GROUP HEADER */
+  .date-group td{
+    padding:.65rem 1.1rem;
+    background:linear-gradient(90deg,rgba(0,229,160,.07) 0%,transparent 100%);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid rgba(0,229,160,.12);
+    font-family:'Sora',sans-serif;font-size:.7rem;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+  }
+  .date-group td .dg-inner{display:flex;align-items:center;gap:.6rem}
+  .date-group td .dg-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+
+  /* DATA ROWS */
+  tbody tr.row{border-bottom:1px solid rgba(26,50,96,.6);transition:background .15s}
+  tbody tr.row:hover{background:rgba(0,229,160,.04)}
+  tbody tr.row.pending{opacity:.65}
+
+  td{padding:.85rem 1.1rem;vertical-align:middle}
+
+  /* COL: number */
+  .col-num{
+    width:42px;text-align:center;
+    font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);
+  }
+
+  /* COL: time */
+  .col-time{white-space:nowrap;width:120px}
+  .time-block{display:flex;flex-direction:column;gap:.1rem}
+  .time-start{font-family:'DM Mono',monospace;font-size:.9rem;font-weight:500;color:var(--accent)}
+  .time-end{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted)}
+
+  /* COL: MP badge */
+  .col-mp{width:80px}
+  .mp-badge{
+    display:inline-flex;align-items:center;gap:.3rem;
+    padding:.22rem .55rem;border-radius:5px;
+    font-family:'DM Mono',monospace;font-size:.63rem;font-weight:500;
+    letter-spacing:.04em;white-space:nowrap;
+    border:1px solid;
+  }
+  .mp-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+  /* COL: project */
+  .col-project{max-width:340px}
+  .project-title{font-family:'Sora',sans-serif;font-size:.85rem;font-weight:700;color:#fff;line-height:1.35;margin-bottom:.3rem}
+
+  /* COL: presenter */
+  .col-presenter{min-width:220px}
+  .presenter-name{font-size:.83rem;font-weight:500;color:var(--text);margin-bottom:.15rem}
+  .presenter-role{font-size:.72rem;color:var(--muted);line-height:1.4}
+  .presenter-pending{font-size:.75rem;color:var(--muted);font-style:italic}
+
+  /* RESULTS INFO */
+  .results-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:.75rem 1.25rem;background:var(--card);border-bottom:1px solid var(--border);
+    font-size:.78rem;color:var(--muted);flex-wrap:wrap;gap:.5rem;
+  }
+  .results-bar strong{color:var(--text)}
+
+  /* EMPTY STATE */
+  .empty-row td{
+    text-align:center;padding:3rem;color:var(--muted);
+    font-style:italic;font-size:.9rem;
+  }
+
+  /* FOOTER */
+  .footer{
+    text-align:center;margin-top:2rem;padding-bottom:2rem;
+    font-family:'DM Mono',monospace;font-size:.65rem;
+    color:var(--muted);letter-spacing:.1em;text-transform:uppercase;
+  }
+
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:#1a3260;border-radius:3px}
+
+  @media(max-width:768px){
+    .header{padding:1.5rem 1rem}
+    .main{padding:.75rem}
+    .col-num{display:none}
+    .col-presenter{display:none}
+    .col-project{max-width:none}
+    .col-mp{width:60px}
+    .col-time{width:90px}
+    .col-time .time-start{font-size:.8rem}
+    .col-time .time-end{font-size:.68rem}
+    table{font-size:.8rem}
+    td{padding:.7rem .75rem}
+
+    /* show presenter info stacked below the project title on mobile */
+    .project-mobile-presenter{
+      display:block;
+      margin-top:.35rem;
+      font-size:.72rem;
+      color:var(--muted);
+      line-height:1.4;
+    }
+    .project-mobile-presenter strong{
+      display:block;
+      color:var(--text);
+      font-weight:500;
+      font-size:.75rem;
+    }
+    .presenter-pending-mobile{
+      display:block;
+      font-size:.7rem;
+      color:var(--muted);
+      font-style:italic;
+      margin-top:.3rem;
+    }
+  }
+  /* hide mobile presenter block on desktop */
+  .project-mobile-presenter, .presenter-pending-mobile{display:none}
+
+  /* ── BOTÃO SAIBA MAIS ── */
+  .btn-info {
+    display:inline-flex; align-items:center; gap:.4rem;
+    margin-top:.45rem;
+    padding:.3rem .75rem .3rem .65rem; border-radius:7px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.05);
+    color:var(--muted); font-size:.72rem; font-family:'DM Sans',sans-serif;
+    font-weight:500; cursor:pointer; white-space:nowrap;
+    transition:all .18s; letter-spacing:.01em;
+  }
+  .btn-info:hover {
+    background:rgba(255,255,255,.1);
+    border-color:rgba(255,255,255,.2);
+    color:var(--text);
+  }
+  .btn-info svg { flex-shrink:0; opacity:.7; }
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay {
+    position:fixed; inset:0; z-index:900;
+    background:rgba(2,6,14,.88); backdrop-filter:blur(14px);
+    display:flex; align-items:center; justify-content:center;
+    padding:1.5rem;
+    opacity:0; pointer-events:none; transition:opacity .25s;
+  }
+  .modal-overlay.open { opacity:1; pointer-events:auto; }
+
+  /* ── MODAL CARD ── */
+  .modal-card {
+    background:#0c1a2e; border:1px solid #1a3260;
+    border-radius:20px; width:100%; max-width:820px;
+    max-height:90vh; display:flex; flex-direction:column;
+    box-shadow:0 32px 80px rgba(0,0,0,.7);
+    transform:translateY(16px); transition:transform .25s;
+  }
+  .modal-overlay.open .modal-card { transform:translateY(0); }
+
+  .modal-header {
+    padding:1.6rem 1.8rem 0 1.8rem; flex-shrink:0;
+  }
+  .modal-inst-row {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:1rem;
+  }
+  .modal-inst-name {
+    display:flex; align-items:center; gap:.5rem;
+    font-family:'DM Mono',monospace; font-size:.65rem; font-weight:500;
+    text-transform:uppercase; letter-spacing:.13em; color:#fb923c;
+  }
+  .modal-inst-dot {
+    width:9px; height:9px; border-radius:50%;
+    background:#fb923c; flex-shrink:0;
+    animation:pulse 2s infinite;
+  }
+  .modal-close {
+    background:rgba(255,255,255,.08); border:none; color:#94a3b8;
+    width:34px; height:34px; border-radius:50%;
+    font-size:1rem; cursor:pointer; display:flex;
+    align-items:center; justify-content:center; transition:all .18s;
+  }
+  .modal-close:hover { background:rgba(255,255,255,.15); color:#fff; }
+  .modal-title {
+    font-family:'Sora',sans-serif; font-size:1.65rem; font-weight:800;
+    color:#fff; line-height:1.2; margin-bottom:1rem;
+  }
+  .modal-time-pill {
+    display:inline-flex; align-items:center; gap:.4rem;
+    background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.25);
+    color:#60a5fa; padding:.3rem .8rem; border-radius:99px;
+    font-family:'DM Mono',monospace; font-size:.68rem;
+    font-weight:500; letter-spacing:.06em; margin-bottom:1.2rem;
+  }
+
+  /* scrollable body */
+  .modal-body {
+    padding:0 1.8rem; overflow-y:auto; flex:1; min-height:0;
+  }
+  .modal-body::-webkit-scrollbar{width:4px}
+  .modal-body::-webkit-scrollbar-track{background:transparent}
+  .modal-body::-webkit-scrollbar-thumb{background:#1a3260;border-radius:2px}
+
+  .modal-desc-box {
+    background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+    border-radius:12px; padding:1.25rem 1.4rem;
+    color:#cbd5e1; font-size:.875rem; line-height:1.85;
+    white-space:pre-wrap; margin-bottom:.25rem;
+  }
+
+  /* footer – responsável */
+  .modal-footer {
+    padding:1.1rem 1.8rem 1.6rem; flex-shrink:0;
+    border-top:1px solid #1a3260;
+  }
+  .modal-footer-label {
+    font-family:'DM Mono',monospace; font-size:.6rem; font-weight:500;
+    text-transform:uppercase; letter-spacing:.14em;
+    color:var(--accent); margin-bottom:.9rem;
+  }
+  .modal-footer-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:1.1rem;
+  }
+  .mfi-label {
+    font-size:.65rem; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--muted); margin-bottom:.3rem; font-weight:600;
+  }
+  .mfi-value { font-size:.9rem; color:#fff; font-weight:600; line-height:1.35; }
+
+  @media(max-width:600px){
+    .modal-footer-grid { grid-template-columns:1fr; }
+    .modal-title { font-size:1.25rem; }
+    .modal-card { border-radius:14px; }
+    .modal-header,.modal-body,.modal-footer { padding-left:1.1rem; padding-right:1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-badge"><span></span> 10ª Edição · TCE-GO, Goiânia · 11–13 mar 2026</div>
+    <h1>Mostra de Soluções Tecnológicas do <em>Ministério Público</em></h1>
+    <div class="header-sub">
+      ENASTIC MP 2026
+      <span class="dot"></span>
+      Cronograma de Apresentações
+    </div>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat">
+      <span class="stat-num" id="stat-total">34</span>
+      <span class="stat-label">Apresentações</span>
+    </div>
+    <div class="stats-divider"></div>
+    <div class="stat">
+      <span class="stat-num" id="stat-orgaos">12</span>
+      <span class="stat-label">Órgãos Participantes</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- FILTER BAR -->
+  <div class="filters-bar">
+    <span class="filter-label">Dia:</span>
+    <button class="filter-btn active" data-filter="all" onclick="setDateFilter('all',this)">Todos</button>
+    <button class="filter-btn" data-filter="12/03" onclick="setDateFilter('12/03',this)">
+      <span class="filter-dot" style="background:#00e5a0"></span>12 mar
+    </button>
+    <button class="filter-btn" data-filter="13/03" onclick="setDateFilter('13/03',this)">
+      <span class="filter-dot" style="background:#3b82f6"></span>13 mar
+    </button>
+    <span class="filter-label" style="margin-left:.5rem">Órgão:</span>
+    <div class="select-wrap">
+      <select class="filter-select" id="mpSelect" onchange="filterRows()">
+        <option value="all">Todos os órgãos</option>
+        <option value="LABIIH">LABIIH</option>
+        <option value="MPAC">MPAC</option>
+        <option value="MPBA">MPBA</option>
+        <option value="MPGO">MPGO</option>
+        <option value="MPMS">MPMS</option>
+        <option value="MPPE">MPPE</option>
+        <option value="MPRO">MPRO</option>
+        <option value="MPRN">MPRN</option>
+        <option value="MPRS">MPRS</option>
+        <option value="MPES">MPES</option>
+      </select>
+    </div>
+    <div class="search-wrap">
+      <input class="search-box" type="text" id="searchInput" placeholder="Buscar projeto ou apresentador…" oninput="filterRows()">
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <div class="results-bar">
+      <span>Exibindo <strong id="range-info">1–34</strong> de <strong id="total-info">34</strong> apresentações</span>
+      <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.06em">ENASTIC · 2026</span>
+    </div>
+    <table id="schedule-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th class="th-accent">Horário</th>
+          <th>MP / Órgão</th>
+          <th>Projeto / Iniciativa</th>
+          <th>Responsável · Cargo</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<div class="footer">ENASTIC MP 2026 · Ministério Público do Estado de Goiás · TCE-GO, Goiânia</div>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal-card" id="modalCard">
+    <div class="modal-header">
+      <div class="modal-inst-row">
+        <div class="modal-inst-name">
+          <span class="modal-inst-dot"></span>
+          <span id="modalInst"></span>
+        </div>
+        <button class="modal-close" onclick="closeModal()" aria-label="Fechar">&#x2715;</button>
+      </div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-time-pill" id="modalTime"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-desc-box" id="modalDesc"></div>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-footer-label">Responsável pela Apresentação</div>
+      <div class="modal-footer-grid">
+        <div>
+          <div class="mfi-label">Nome</div>
+          <div class="mfi-value" id="modalName"></div>
+        </div>
+        <div>
+          <div class="mfi-label">Cargo / Função</div>
+          <div class="mfi-value" id="modalRole"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const MP_COLORS = {
+  MPES:   { color:'#fbbf24', bg:'rgba(251,191,36,.1)',  border:'rgba(251,191,36,.25)' },
+  MPRO:   { color:'#f87171', bg:'rgba(239,68,68,.1)',   border:'rgba(239,68,68,.25)' },
+  MPRN:   { color:'#60a5fa', bg:'rgba(59,130,246,.1)',  border:'rgba(59,130,246,.25)' },
+  MPPE:   { color:'#f472b6', bg:'rgba(236,72,153,.1)',  border:'rgba(236,72,153,.25)' },
+  MPBA:   { color:'#34d399', bg:'rgba(52,211,153,.1)',  border:'rgba(52,211,153,.25)' },
+  MPRS:   { color:'#c084fc', bg:'rgba(168,85,247,.1)',  border:'rgba(168,85,247,.25)' },
+  MPAC:   { color:'#2dd4bf', bg:'rgba(20,184,166,.1)',  border:'rgba(20,184,166,.25)' },
+  MPMS:   { color:'#fb923c', bg:'rgba(249,115,22,.1)',  border:'rgba(249,115,22,.25)' },
+  MPGO:   { color:'#4ade80', bg:'rgba(34,197,94,.1)',   border:'rgba(34,197,94,.25)' },
+  LABIIH: { color:'#94a3b8', bg:'rgba(100,116,139,.1)', border:'rgba(100,116,139,.25)' },
+};
+
+/* ── DESCRIÇÕES E UNIDADES (fonte: planilha) ── */
+const DESC_MAP = {
+  1: { unit:`Ministério Público do Estado do Espírito Santo (MPES)`, desc:`O programa AMPL.IA (Aprimoramento de Métodos e Processos com Linguagens de Inteligência Artificial) marca uma nova fase na atuação do Ministério Público do Estado do Espírito Santo (MPES), focada na modernização e na eficiência institucional por meio do uso de inteligência artificial própria.
+
+Lançado em 28 de julho de 2025, o programa não é apenas um pacote de softwares, mas uma mudança de lógica operacional. Ele visa automatizar tarefas repetitivas e de baixa complexidade, permitindo que promotores, procuradores e servidores dediquem mais tempo a análises estratégicas e decisões que exigem sensibilidade humana.
+
+1. Filosofia e Governança
+O programa foi desenvolvido sob pilares de responsabilidade ética, sustentabilidade e colaboração interna. O desenvolvimento é fruto de uma parceria entre diversos setores internos (UIS/AGE, CINF e ATEC), garantindo que as ferramentas atendam às necessidades reais do negócio jurídico.
+
+2. Ferramentas Iniciais Disponíveis
+Gerador de Denúncia (Tráfico de Drogas): Utiliza a técnica de Retrieval Augmented Generation (RAG) para analisar inquéritos policiais e criar minutas de denúncias. O sistema reduz "alucinações" da IA e garante padronização, diminuindo vieses e variações indevidas entre peças processuais.
+
+Chat Gampes: Um chatbot que permite ao usuário interagir com documentos de processos em linguagem natural, facilitando a extração rápida de informações.
+
+Sumarizador: Cria resumos estruturados de documentos utilizando subagentes de IA para dupla checagem, garantindo abrangência e fidelidade ao contexto original.
+
+Transcrição de Vídeos: Converte automaticamente depoimentos e audiências em texto, permitindo que o operador do Direito encontre trechos específicos sem precisar assistir a horas de gravação.
+
+3. Impacto na Atuação Institucional
+A implementação da IA no MPES busca transformar o trabalho em algo mais estratégico. A tecnologia apoia, mas não substitui o trabalho humano; a decisão final e a responsabilidade jurídica permanecem com os membros e servidores.
+
+4. Evolução Contínua
+O AMPL.IA é um projeto vivo. A fase inicial foca no feedback dos usuários para correções e melhorias. O objetivo final é ampliar continuamente as capacidades do MPES, garantindo transparência e uma presença mais forte na defesa dos direitos da população capixaba.` },
+  2: { unit:`Ministério Público do Estado de Rondônia (MPRO)`, desc:`O Sistema Gabinete IA é uma solução tecnológica inovadora desenvolvida para modernizar e potencializar a gestão dos processos judiciais eletrônicos sob responsabilidade dos membros do Ministério Público do Estado de Rondônia. Evolução natural do Sistema Gabinete, a plataforma integra gestão processual digital com recursos avançados de Inteligência Artificial, promovendo maior eficiência, segurança, celeridade e qualidade técnica na atuação ministerial.
+
+O sistema permite o acompanhamento eletrônico completo dos processos judiciais, com acesso rápido e seguro a peças, documentos e movimentações, integrando-se diretamente aos sistemas judiciais dos tribunais. A gestão de prazos é aprimorada por mecanismos inteligentes de controle e alerta, reduzindo riscos operacionais e oferecendo maior previsibilidade ao fluxo de trabalho dos gabinetes.
+
+O grande diferencial está na incorporação de funcionalidades baseadas em IA aplicadas à rotina jurídica: transcrição de vídeos de audiências e depoimentos, resumos inteligentes de processos, chat inteligente com o processo que permite ao usuário interagir diretamente com os autos por meio de linguagem natural, e auxílio na elaboração de rascunhos de peças processuais.
+
+Ao otimizar fluxos, reduzir tarefas repetitivas, diminuir o uso de papel e oferecer relatórios gerenciais sobre produtividade e desempenho, o Sistema Gabinete IA consolida-se como uma ferramenta estratégica para a inovação institucional.` },
+  3: { unit:`Ministério Público do Estado de Rondônia (MPRO)`, desc:`A Plataforma Rondon.IA é uma iniciativa estratégica do Ministério Público do Estado de Rondônia voltada à incorporação responsável e estruturada de soluções de inteligência artificial no ambiente institucional. O projeto nasce com o propósito de apoiar a modernização dos processos de trabalho, ampliar a eficiência administrativa e finalística e oferecer suporte prático a membros e servidores no desempenho de suas atividades diárias, sempre em conformidade com os princípios da legalidade, da segurança da informação, da proteção de dados e da governança digital.
+
+Concebida como um ambiente seguro e controlado, a Plataforma Rondon.IA centraliza serviços de inteligência artificial alinhados às demandas reais do MPRO. Entre suas funcionalidades, destacam-se:
+
+Transcrição automatizada de vídeos e áudios: permite a conversão rápida e padronizada de conteúdos audiovisuais em texto, facilitando a análise de depoimentos, reuniões e audiências.
+
+Anonimização de documentos: identifica e trata dados pessoais e sensíveis de forma automatizada, em consonância com a LGPD.
+
+Banco institucional de prompts: repositório estruturado de comandos e orientações para uso em soluções de IA generativa, desenvolvido especificamente para o contexto do Ministério Público, com o objetivo de padronizar práticas e disseminar conhecimento.
+
+Destinada exclusivamente a membros e servidores do MPRO, a Plataforma Rondon.IA representa um passo concreto na transformação digital da instituição.` },
+  4: { unit:`Ministério Público do Estado de Rondônia (MPRO)`, desc:`O Nomos é um sistema inovador para gerenciar a edição de atos e normas do Ministério Público de Rondônia (MPRO), acompanhando todo o ciclo de vida dos documentos, desde a elaboração da minuta até a publicação do ato. O software oferece funcionalidades de versionamento e compartilhamento, permitindo que a minuta seja revisada de forma colaborativa. Após a conclusão, o ato é assinado eletronicamente diretamente no Nomos e enviado para publicação no Diário Oficial do MPRO.
+
+Uma vez publicado, o ato é distribuído através do Microsoft Teams para todos os interessados e disponibilizado na interface de consulta pública do Nomos para acesso da sociedade. Todo o processo é realizado em conformidade com a Recomendação 109/2024 do Conselho Nacional do Ministério Público (CNMP).
+
+O Nomos é inovador em diversos aspectos. Seu editor utiliza tags que formatam a norma automaticamente à medida que o texto é digitado, garantindo identidade visual e cumprimento das regras metodológicas. Um dos maiores diferenciais do Nomos é sua capacidade de gerar automaticamente as versões alterada e consolidada das normas, sem necessidade de intervenção do responsável.
+
+O Nomos também incorpora Inteligência Artificial em várias frentes: a IA sugere minutas, divide a norma em seções quando necessário e permite a consulta de documentos por meio de linguagem natural. O desenvolvimento segue as boas práticas da programação moderna e está sendo projetado para compartilhamento com outros órgãos públicos.` },
+  5: { unit:`Ministério Público do Estado do Rio Grande do Norte (MPRN)`, desc:`O projeto Genius consiste nas implantações do Gemini e do NotebookLM, ferramentas de IA do Google, com o objetivo de aumentar a produtividade no MPRN por meio da capacitação dos seus integrantes em Inteligência Artificial e do desenvolvimento coletivo de um banco de prompts.` },
+  6: { unit:`Ministério Público do Estado do Rio Grande do Norte (MPRN)`, desc:`O Projeto CAOP LM é uma solução inovadora de Inteligência Artificial desenvolvida pelo Ministério Público do Rio Grande do Norte (MPRN) para realizar a gestão inteligente e segura do conhecimento institucional. Integrante do Pilar 3 ("Conhecimento Confiável") do Projeto Genius, a iniciativa utiliza a tecnologia do NotebookLM para criar um assistente de pesquisa altamente especializado e de uso interno.
+
+O objetivo do projeto é resolver o desafio de acessar e filtrar o volume massivo de documentos, manuais, notas técnicas e pareceres do MPRN de forma rápida e precisa. Para evitar os riscos de "alucinações", o CAOP LM opera em um ecossistema fechado e baseia-se em três premissas fundamentais:
+
+Fidelidade Absoluta (Zero Invenção): A IA gera respostas baseadas exclusivamente nos documentos oficiais do MPRN que a alimentam. Ela bloqueia buscas externas na internet e não inventa dados.
+
+Rastreabilidade Total: Toda resposta gerada pela ferramenta cita de forma transparente a fonte exata, o documento e o trecho de onde a informação saiu, permitindo checagem imediata.
+
+Confidencialidade Assegurada: O ambiente é totalmente isolado, garantindo que nenhum dado sensível vaze ou seja utilizado para treinar modelos de IA públicos.` },
+  7: { unit:`Ministério Público do Estado do Rio Grande do Norte (MPRN)`, desc:`O Robin é a mais nova plataforma institucional do MPRN baseada em Inteligência Artificial, desenhada para potencializar o trabalho dos membros e servidores do MPRN na análise de processos judiciais, gerando agilidade no andamento das atividades. Com integração direta a sistemas externos, ele importa e processa automaticamente grandes volumes de documentos, entregando em minutos uma análise realizada por Agentes de IA — como o sumário estratégico completo e a minuta ideal para a atuação.
+
+Muito mais que um simples leitor de PDFs, o Robin atua como um assessor que utiliza agentes de IA para realização de análises, possibilita a validação de Agentes de IA e atua como um assistente de produtividade sem precedentes.
+
+Através da integração via MNI, o Robin pode importar todos os documentos de um processo de sistemas judiciais externos (como o PJe) de forma 100% automática, direto na plataforma. Com um sistema intuitivo, é possível realizar o fácil cadastro, modificação e gestão de pipelines e prompts, garantindo respostas cada vez mais precisas e alinhadas aos objetivos de cada demanda.` },
+  8: { unit:`Ministério Público do Estado do Rio Grande do Norte (MPRN)`, desc:`O Assistente Virtual do e-MP é a solução de Inteligência Artificial totalmente integrada e nativa do sistema de gestão processual do MPRN, criada para combater a sobrecarga de demandas em procedimentos Administrativos, Extrajudiciais e Judiciais. Acessível com um clique no sistema de virtualização do MPRN, a ferramenta opera com um arsenal de Agentes de IA — tanto específicos para determinadas classes e assuntos, quanto genéricos para uso universal.
+
+O Assistente não utiliza um modelo único para tudo. Ele aciona Agentes de IA específicos dependendo da classe ou do assunto processual, garantindo sumarizações estratégicas e análises com altíssimo grau de acurácia jurídica. Se o processo tem origem em um sistema judicial externo, o sistema se comunica automaticamente via integração, puxando todos os documentos mais recentes, garantindo que a IA trabalhe sempre com o estado da arte do processo.
+
+O Assistente Virtual do e-MP não entrega apenas um texto para ser copiado e colado. Ele constrói a minuta do documento final dentro do próprio sistema de gestão. O documento já nasce com a formatação correta, tabulação, cabeçalho institucional e alinhado ao objetivo do agente utilizado com a movimentação da taxonomia correta.` },
+  9: { unit:`Ministério Público do Estado do Rio Grande do Norte (MPRN)`, desc:`O método de Desenvolvimento Acessível do MPRN é uma mudança de paradigma na engenharia de software governamental. Mais do que aplicar requisitos internacionais de acessibilidade, a solução transforma a forma como se constrói tecnologia ao inserir no ciclo de desenvolvimento o foco em inclusão, tornando padrão e obrigatório o uso das técnicas e ferramentas para acessibilidade no processo de desenvolvimento, incluindo servidores e membros com deficiência diretamente no ciclo de desenvolvimento e testes de qualidade (QA).
+
+O grande diferencial é a inclusão ativa dos próprios usuários com deficiência visual no ambiente de desenvolvimento. Eles não são apenas os destinatários finais do software; eles são parte integrante do time de Qualidade (QA). Eles testam, validam e guiam a acessibilidade dos sistemas antes de qualquer lançamento.
+
+O Desenvolvimento Acessível provou que quando a tecnologia é desenhada com empatia e co-criação, ela deixa de ser uma limitação e volta a ser o que sempre deveria ser: uma ferramenta de empoderamento. Ao adotar esse método, o MPRN garante que a justiça seja promovida por todos, e para todos.` },
+  10: { unit:`Ministério Público do Estado de Pernambuco (MPPE)`, desc:`A proatividade do time de Tecnologia do MPPE em adotar novas ferramentas de trabalho resultou no aumento da capacidade de entregas.` },
+  11: { unit:`Ministério Público do Estado de Pernambuco (MPPE)`, desc:`O uso de IA aumentou a capacidade de entregas do time de desenvolvimento do MPPE. Vamos mostrar como estamos utilizando Antigravity + IA.` },
+  12: { unit:`Ministério Público do Estado de Pernambuco (MPPE)`, desc:`O MPPE APP representa um marco na transformação digital do Ministério Público de Pernambuco. Desenvolvido com arquitetura mobile-first, o aplicativo unifica a vida funcional de membros e servidores em uma plataforma integrada de dados, centralizando serviços essenciais em um único ecossistema digital.
+
+Esta apresentação demonstra como a modernização dos processos internos — aliada a uma arquitetura baseada em microserviços — viabilizou a descentralização de serviços críticos, resultando em maior agilidade operacional, eficiência institucional e transparência na gestão.` },
+  13: { unit:`Ministério Público do Estado de Pernambuco (MPPE)`, desc:`O projeto "Atos Inteligentes" redefine a gestão dos Atos Normativos do Ministério Público de Pernambuco (MPPE), transformando o tradicional Diário Oficial em uma plataforma de dados estruturados e semânticos. A solução utiliza Inteligência Artificial para automatizar a indexação, categorização e recuperação de atos administrativos e jurídicos, eliminando o isolamento de informações em PDFs estáticos e sistemas convencionais.` },
+  14: { unit:`Ministério Público do Estado da Bahia (MPBA)`, desc:`O AUTOMATIZE-SE é o programa institucional de automação inteligente do Ministério Público do Estado da Bahia (MPBA), estruturado para transformar a forma como as unidades administrativas e finalísticas desenvolvem, implementam e governam soluções digitais. Apresentado na edição anterior da Mostra de TI como iniciativa estratégica de transformação digital, o programa evoluiu de um modelo conceitual para um ecossistema consolidado de soluções com impacto mensurável.
+
+Além da automação de processos, o AUTOMATIZE-SE estruturou um modelo de Governança para Power Platform com definição formal de papéis, matriz RACI, controle de ambientes (desenvolvimento, homologação e produção), implantação de Pipeline e adoção do modelo de Centro de Excelência (CoE). Esse avanço garante segurança, padronização, rastreabilidade e alinhamento estratégico das soluções desenvolvidas pelas unidades.
+
+No eixo cultural, o programa avançou na implementação de um modelo de gamificação institucional, com critérios objetivos de pontuação (participação, capacitação, colaboração, entrega e valor institucional), reconhecendo servidores por meio de badges e indicadores de impacto. Essa abordagem visa estimular engajamento sustentável, inovação responsável e geração de valor público.` },
+  15: { unit:`Ministério Público do Estado da Bahia (MPBA)`, desc:`O Painel de BI da Alfabetização-MPBA foi desenvolvido para consolidar dados e indicadores relacionados à alfabetização no Estado da Bahia, com foco no acompanhamento das políticas públicas voltadas à aprendizagem na idade certa. As informações apresentadas são provenientes de bases oficiais, incluindo o Censo Escolar, avaliações de aprendizagem e registros administrativos das redes municipais de ensino.
+
+O painel tem como objetivo oferecer transparência, facilitar o monitoramento dos resultados educacionais e apoiar a tomada de decisão por gestores públicos, educadores e sociedade civil. Por meio de filtros interativos, é possível acessar informações detalhadas por Ano, Município, Núcleo Territorial de Educação e outros recortes relevantes.
+
+Entre os dados disponibilizados, destacam-se: adesão dos municípios às políticas de alfabetização; percentual de estudantes alfabetizados por município e rede de ensino; evolução histórica dos resultados de aprendizagem; indicadores de participação e cobertura das avaliações; infraestrutura das escolas que ofertam os anos iniciais do Ensino Fundamental; e perfil das matrículas e dos profissionais envolvidos no processo de alfabetização.` },
+  16: { unit:`Ministério Público do Estado da Bahia (MPBA)`, desc:`O Aplicativo Cegonha, disponibilizado gratuitamente, tem como objetivo garantir às gestantes o acesso facilitado às informações pertinentes aos exames e consultas mínimas necessárias ao pré-natal de qualidade, de acordo com o tempo gestacional, conforme parâmetros estabelecidos pelo Sistema Único de Saúde.
+
+A ferramenta proporcionará às usuárias o protagonismo no próprio cuidado, além de disponibilizar informativos e notificações acerca dos direitos relacionados à gestação no que se refere à assistência à saúde.
+
+Ademais, o aplicativo oferecerá um canal direto de comunicação com o Ministério Público, inclusive para questões relacionadas à violência obstétrica, fortalecendo assim a rede de proteção às gestantes e garantindo o exercício pleno de seus direitos fundamentais.` },
+  17: { unit:`Ministério Público do Estado da Bahia (MPBA)`, desc:`O IDEA+ é o sistema institucional responsável por controlar toda a atividade finalística do MPBA. Desenvolvido com foco em modernização tecnológica, ele centraliza, organiza e disponibiliza, em tempo real, todas as informações produzidas e de interesse do Ministério Público.
+
+Baseado em uma arquitetura integrada e orientada à performance, incorporando também recursos de inteligência artificial e automação, o sistema funciona como uma base única de dados, garantindo maior velocidade no processamento das informações, estabilidade operacional e escalabilidade para atender ao crescimento das demandas institucionais.
+
+Além disso, sua concepção prioriza usabilidade e experiência do usuário, com interface intuitiva, navegação simplificada e fluxos de trabalho otimizados.
+
+O IDEA oferece suporte estratégico à gestão e à geração de indicadores das atividades finalísticas da instituição, proporcionando análise de dados de forma rápida, funcional e confiável.` },
+  18: { unit:`Ministério Público do Estado do Rio Grande do Sul (MPRS)`, desc:`Esta ferramenta apresenta uma solução de engenharia de dados e inteligência artificial voltada à pesquisa jurisprudencial em linguagem natural, utilizando como base os espelhos de acórdãos do Superior Tribunal de Justiça (STJ). A proposta central é substituir a lógica limitada de busca por palavras-chave por um modelo orientado à compreensão semântica e à intenção jurídica do usuário.
+
+A arquitetura é estruturada em um pipeline contínuo de ingestão, processamento e recuperação inteligente de dados. Scripts automatizados realizam o monitoramento e download sistemático dos espelhos de acórdãos disponibilizados pelo STJ. O conteúdo dos acórdãos é convertido em embeddings por meio da biblioteca Sentence-Transformers, armazenados no ChromaDB para buscas por similaridade matemática.
+
+A recuperação inicial é refinada por modelos de reranking baseados em cross-encoders. A camada de inteligência utiliza modelos de linguagem integrados via Google Generative AI (Gemini SDK) ou executados localmente com Ollama, seguindo a metodologia RAG (Retrieval-Augmented Generation). O mecanismo de grounding garante que cada afirmação esteja ancorada em precedentes efetivamente constantes da base, reduzindo risco de "alucinação".
+
+O principal benefício está na redução drástica do tempo de latência entre a dúvida jurídica e a identificação de precedentes relevantes. Pesquisas que tradicionalmente demandariam múltiplas combinações de palavras-chave passam a ser realizadas em segundos, com foco direto na questão jurídica central.` },
+  19: { unit:`Ministério Público do Estado do Rio Grande do Sul (MPRS)`, desc:`A Aurora é uma plataforma de Inteligência Artificial desenvolvida pelo Ministério Público do Rio Grande do Sul (MPRS) em parceria com a Xertica.ai. Construída no ecossistema do Google Cloud Platform (GCP), a Aurora transcende a automação, atuando como "infraestrutura cognitiva" que integra capacidades multimodais de IA aos sistemas de justiça. O projeto democratiza o acesso à IA, quebrando silos geográficos e transformando dados não estruturados em inteligência acionável para a defesa da sociedade.
+
+A arquitetura da Aurora foi desenhada sob o paradigma API-first e microsserviços, garantindo escalabilidade. A plataforma utiliza Google Kubernetes Engine (GKE) e Cloud Run para microsserviços, integrados ao Pub/Sub, permitindo ingestão assíncrona de até 17.280 processos judiciais por dia. Integra LLMs com o Vertex AI, utilizando os modelos Gemini 2.0 Flash e Gemini 1.5 Flash, com janela de contexto de 1 milhão de tokens para leitura integral de processos extensos. O assistente conversacional (RAG) utiliza Vertex AI Agent Builder e Dialogflow CX, com Grounding que garante respostas baseadas nos metadados e documentos do processo.
+
+Os dados até fevereiro de 2026 demonstram ganho de produtividade: foram processadas e transcritas mais de 99.347 mídias, somando 13.012 horas convertidas em dados estruturados e pesquisáveis. Entre julho de 2025 e janeiro de 2026, 37.028 peças jurídicas foram geradas com apoio da IA; em 11 de fevereiro de 2026, superou 1.000 peças em um único dia. Há 1.432 usuários únicos ativos e um "Banco de Prompts" institucional que permite compartilhar inteligência produzida por um promotor com toda a rede.
+
+A "Centralidade da Pessoa Humana" é princípio inegociável da Aurora. A IA atua como copiloto e nunca substitui a decisão do Promotor de Justiça.` },
+  20: { unit:`Ministério Público do Estado do Rio Grande do Sul (MPRS)`, desc:`O ALICE é uma plataforma de "IA Soberana" que utiliza agentes autônomos para combater a corrupção nas contratações públicas. Ao contrário de painéis passivos, o ALICE analisa proativamente conjuntos de dados massivos para detectar fraudes, cartéis e irregularidades em tempo real. Combina um assistente jurídico que interpreta leis de contratação com um motor de auditoria que cruza dados fiscais, empresariais e geoespaciais, fornecendo uma "Pontuação de Conformidade" abrangente para fornecedores do governo antes da assinatura de contratos.
+
+A plataforma opera através de quatro módulos integrados:
+
+Assistente Jurídico Agêntico: Um sistema baseado em RAG que interpreta a nova Lei de Licitações (14.133/21), respondendo a questões técnicas com precisão estatutária.
+
+Auditoria de Conformidade Automatizada: Agentes consultam autonomamente fontes de Big Data (BigQuery) para validar a elegibilidade dos fornecedores, verificando empresas de fachada ou irregularidades fiscais.
+
+Inteligência Geoespacial: Mapas de calor rastreiam o fluxo de fundos públicos, identificando a concentração de mercado regional.
+
+Grafos de Relacionamento: Mapas visuais detectam colusões ocultas e comportamento de cartel entre empresas licitantes.
+
+O ALICE opera sob uma estrutura rigorosa de "Human-in-the-Loop". A IA sinaliza potenciais irregularidades e gera uma Pontuação de Conformidade, mas a decisão jurídica final de suspender um concurso ou processar permanece com o procurador humano.` },
+  21: { unit:`Ministério Público do Estado do Rio Grande do Sul (MPRS)`, desc:`A DHALIA é uma plataforma de IA especializada, concebida para democratizar a aplicação do Sistema Interamericano de Direitos Humanos. Utilizando Retrieval-Augmented Generation (RAG) e pesquisa semântica, auxilia os procuradores a identificar tensões entre as leis locais e os padrões internacionais (Controle de Convencionalidade). Garante que as ações judiciais protegem direitos fundamentais ao fornecer citações precisas e livres de alucinações da Corte Interamericana.
+
+A DHALIA aborda uma lacuna crítica no sistema de justiça brasileiro: a dificuldade de aplicar a vasta e complexa jurisprudência da Corte Interamericana de Direitos Humanos (Corte IDH) na prática jurídica diária. O projeto transforma o "Controle de Convencionalidade" — muitas vezes um conceito teórico — num fluxo de trabalho prático assistido por IA.
+
+O seu recurso principal, "Controle de Convencionalidade Assistido", permite que os procuradores enviem documentos e recebam uma análise automatizada que identifica incompatibilidades com os padrões internacionais de direitos humanos.
+
+Crucialmente, a DHALIA resolve o problema da "Caixa Preta" da IA jurídica através de uma rigorosa Cadeia de Custódia Documental. Cada afirmação gerada pela IA é obrigatoriamente vinculada ao ID e URL da sua fonte oficial, eliminando alucinações jurídicas. Os documentos submetidos para análise são processados em memória e imediatamente descartados, garantindo confidencialidade absoluta.` },
+  22: { unit:`Ministério Público do Estado do Rio Grande do Sul (MPRS)`, desc:`O Projeto ELO é uma plataforma de governança digital que utiliza IA para orquestrar a rede de segurança social. Conecta instituições validadas (escolas, abrigos, ONGs) a doadores através de um ambiente seguro de "Raiz de Confiança" gerido pelo Ministério Público. Utilizando correspondência semântica e validação geoespacial, o ELO garante que as doações cheguem a quem precisa de forma eficiente, protegendo a dignidade e a privacidade dos dados de beneficiários vulneráveis.
+
+Desenvolvido em resposta à fragmentação do auxílio social, o Projeto ELO reposiciona o Ministério Público de um órgão puramente punitivo para um fomentador ativo da solidariedade social.
+
+Tecnologicamente, o ELO utiliza um motor de "Dupla Verificação Cognitiva": embeddings vetoriais correspondem ofertas de doação com necessidades institucionais; um LLM secundário valida a coerência lógica da correspondência; e um motor geoespacial (PostGIS) valida se o doador e a instituição estão dentro de um raio logístico viável.
+
+Para proteger a dignidade, os beneficiários são representados por avatares/alcunhas, e o contato direto é bloqueado para prevenir assédio ou fraude. Esta arquitetura cria um ambiente seguro e gamificado (usando medalhas para doadores recorrentes) que incentiva uma cultura sustentável de doação.` },
+  23: { unit:`Ministério Público do Estado do Rio Grande do Sul (MPRS)`, desc:`LUPA LGPD é uma solução de triagem baseada em modelo de linguagem executado localmente para apoiar a revisão e a adequação dos atos internos do Ministério Público às exigências da Lei nº 13.709/2018 (LGPD) e da Resolução CNMP nº 281/2023. Atende ao art. 156 dessa Resolução, que determina revisar, nas unidades do MP, normas sobre proteção de dados.
+
+A ferramenta roda em infraestrutura local e atua como classificador semântico para triagem inicial de atos, identificando riscos e priorizando o encaminhamento de casos para análise especializada. A classificação adota cinco níveis: R0 (Sem impacto), R1 (Tratamento necessário/proporcional), R2 (Publicidade excessiva – dados comuns), R3 (Dados sensíveis envolvidos) e R4 (Falta de salvaguardas).
+
+O LUPA foi aplicado sobre o acervo normativo do MPRS, analisando Boletins, Convênios, Editais, Instruções Normativas, Ordens de Serviço, Portarias, Provimentos, Recomendações, Resoluções e seus respectivos anexos.
+
+Entre os resultados, destacam-se os dados de Convênios: de 827 registros, 216 (26,1%) foram classificados como R0, 481 (58,2%) como R1, 22 (2,7%) como R2, 107 (12,9%) como R3 e 1 (0,1%) como R4. Após a revisão, apenas oito convênios vigentes demandaram adequações específicas. Por operar localmente, o LUPA reforça a soberania informacional e protege conteúdos sensíveis.` },
+  24: { unit:`Ministério Público do Estado do Rio Grande do Sul (MPRS)`, desc:`O Ministério Público do Estado do Rio Grande do Sul (MPRS) apresenta o SIGE-MPRS, sistema de gestão estratégica desenvolvido para organizar, sistematizar e integrar os elementos fundamentais do planejamento institucional, promovendo maior governança, alinhamento e tomada de decisão baseada em dados estratégicos.
+
+A solução foi concebida para estruturar, em ambiente digital integrado, os objetivos estratégicos (dimensão qualitativa e inspiracional), seus respectivos resultados-chave (prioridades quantificáveis) e as ações estratégicas (iniciativas responsáveis pela implementação do planejamento estratégico). O sistema permite a visualização dos elementos em formato de mapa mental dinâmico, favorecendo compreensão sistêmica, bem como conexão entre propósito, prioridades e execução.
+
+O SIGE-MPRS contém módulo de indicadores estratégicos, reunindo métricas vinculadas aos objetivos e às ações. Esses dados são organizados em painéis interativos (dashboards), possibilitando o monitoramento e a avaliação dos indicadores, a extração de relatórios gerenciais e o apoio qualificado à tomada de decisão.
+
+A arquitetura do sistema foi concebida sob lógica modular e adaptável, o que favorece sua replicação em outros Ministérios Públicos e Instituições do Sistema de Justiça, permitindo customização a diferentes arranjos organizacionais e níveis de maturidade institucional.` },
+  25: { unit:`Ministério Público do Estado de Mato Grosso do Sul (MPMS)`, desc:`O projeto aprimora a ferramenta de atos e normas do Ministério Público (MP), com ênfase no mapeamento integral do ciclo de vida dos atos administrativos – criação, aprovação, validação e publicação – que atravessa múltiplas unidades (assessorias jurídicas, secretarias, gabinetes e coordenações).
+
+Principais etapas realizadas:
+– Mapeamento do Processo End-to-End: Análise detalhada do fluxo entre unidades, identificando interfaces, prazos, aprovação, validação e publicação.
+– Levantamento de Requisitos com Usuários: Entrevistas para capturar dores reais, como buscas fragmentadas por etapa/unidade e ausência de visibilidade em atos pendentes.
+– Melhorias Focadas na Localização Eficiente: Funcionalidades de filtros por unidade/tipo de ato, busca semântica inteligente, integração contextual e alertas de publicação.
+– Testes e Validação Iterativa: Ciclos com usuários de diferentes unidades, validando redução no tempo de localização de atos relevantes.
+
+Impactos Esperados: Agilidade no ciclo de atos, menor tempo para encontrar documentos demandados no dia a dia, redução de erros interunidades e ferramenta como hub central para eficiência operacional.` },
+  26: { unit:`Ministério Público do Estado do Acre (MPAC)`, desc:`Tecnolog.IA é uma plataforma do Ministério Público do Acre que funciona como um HUB de ferramentas de inteligência artificial e ferramentas tecnológicas que resolvem problemas pontuais.
+
+Uma das principais ferramentas do HUB é o TranscreveAI. Esta ferramenta vai além da transcrição de áudio e vídeo, permitindo que o usuário gere vários tipos de resumos diferentes, de acordo com o conteúdo que foi transcrito. O TranscreveAI funciona 100% internamente, contando com infraestrutura local para processar todas as IAs envolvidas no processo.
+
+Outra ferramenta importante é a Anton.IA. Nas suas últimas atualizações ela deixou de ser apenas um CHAT que conversa com dados, tornando-se ela própria uma API que pode ser integrada aos sistemas internos do MPAC, permitindo que esses sistemas utilizem recursos de Inteligência Artificial generativa. Na prática, ela atua como uma infraestrutura de inteligência que potencializa as ferramentas já utilizadas pela instituição.` },
+  27: { unit:`Ministério Público do Estado do Acre (MPAC)`, desc:`O MPAC Lab é uma iniciativa do Ministério Público do Estado do Acre voltada à experimentação, desenvolvimento e aplicação prática de tecnologias inovadoras no setor público.
+
+Utilizando uma infraestrutura baseada em JupyterHub, o MPAC Lab oferece um espaço centralizado que permite a execução de um ambiente interativo de programação, diretamente no navegador, eliminando barreiras técnicas relacionadas à instalação e configuração de ambientes de desenvolvimento.
+
+Isso possibilita que os participantes foquem no aprendizado e na experimentação, trabalhando com linguagens como Python e bibliotecas voltadas à análise de dados, automação e desenvolvimento de sistemas de inteligência artificial.` },
+  28: { unit:`LABIIH (Laboratório de Inovação em Identificação Humana) – PCGO`, desc:`Informações a confirmar.` },
+  29: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  30: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  31: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  32: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  33: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  34: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+};
+
+const DATA = [
+  // ── ABERTURA ──
+  { id: 0, date:'12/03', time:'16:45', timeEnd:'16:50', mp:'', title:'Abertura da Mostra', presenter:'', role:'', pending:true, opening:true },
+  { id: 1, date:'12/03', time:'16:50', timeEnd:'17:00', mp:'MPES', title:'AMPL.IA', presenter:'Pedro Pelacani Berger', role:'Assessor de Planejamento e Gestão, Coordenador da Unidade de Inovação e Sustentabilidade', pending:false },
+  { id: 2, date:'12/03', time:'17:00', timeEnd:'17:05', mp:'MPRO', title:'Sistema Gabinete IA', presenter:'Elieber Nascimento de Souza', role:'Chefe de Departamento de Sistemas de Informação', pending:false },
+  { id: 3, date:'12/03', time:'17:05', timeEnd:'17:10', mp:'MPRO', title:'Plataforma Rondon.IA', presenter:'Marcos Roberto de Lima Leandro', role:'Diretor de Tecnologia da Informação', pending:false },
+  { id: 4, date:'12/03', time:'17:10', timeEnd:'17:15', mp:'MPRO', title:'NOMOS – Acervo de Atos e Normas do MP de Rondônia', presenter:'Marcelo Douglas Silva dos Santos', role:'Chefe do Laboratório de Colaboração e Inovação', pending:false },
+  { id: 5, date:'12/03', time:'17:15', timeEnd:'17:20', mp:'MPRN', title:'Genius', presenter:'Carlos Eduardo de Farias e Bruno Suassuna', role:'Chefe de Dep. de Infraestrutura e Gerente de Governança e Inovações', pending:false },
+  { id: 6, date:'12/03', time:'17:20', timeEnd:'17:25', mp:'MPRN', title:'Projeto CAOP LM – Gestão Inteligente e Segura do Conhecimento', presenter:'Bruno Suassuna', role:'Gerente de Governança e Inovação de TI', pending:false },
+  { id: 7, date:'12/03', time:'17:25', timeEnd:'17:30', mp:'MPRN', title:'Assistente virtual – novo assistente e laboratório de IA do MPRN', presenter:'André Maranhão de Miranda', role:'Chefe do Departamento de Sistemas', pending:false },
+  { id: 8, date:'12/03', time:'17:30', timeEnd:'17:35', mp:'MPRN', title:'JusticIA – Assistente Virtual do e-MP', presenter:'André Maranhão de Miranda', role:'Chefe do Departamento de Sistemas', pending:false },
+  { id: 9, date:'12/03', time:'17:35', timeEnd:'17:40', mp:'MPRN', title:'Desenvolvimento Acessível – Tecnologia Sem Barreiras', presenter:'André Maranhão de Miranda', role:'Chefe do Departamento de Sistemas', pending:false },
+  { id:10, date:'12/03', time:'17:40', timeEnd:'17:45', mp:'MPPE', title:'Iniciativa: uso de novas ferramentas nas atividades do time de tecnologia', presenter:'Rudiney de Lacerda Barbosa', role:'Analista Ministerial de TI', pending:false },
+  { id:11, date:'12/03', time:'17:45', timeEnd:'17:50', mp:'MPPE', title:'Iniciativa: o uso de IA no time de Tecnologia do MPPE', presenter:'Rudiney de Lacerda Barbosa', role:'Analista Ministerial de TI', pending:false },
+  { id:12, date:'12/03', time:'17:50', timeEnd:'17:55', mp:'MPPE', title:'MPPE APP — Uma Convergência de Serviços Digitais na Palma da Mão', presenter:'Petrônio Araújo de Medeiros', role:'Gerente de Projetos', pending:false },
+  { id:13, date:'12/03', time:'17:55', timeEnd:'18:00', mp:'MPPE', title:'Atos Inteligentes: A Nova Fronteira da Gestão Normativa no MPPE', presenter:'Petrônio Araújo de Medeiros', role:'Gerente de Projetos', pending:false },
+  { id:14, date:'12/03', time:'18:00', timeEnd:'18:05', mp:'MPBA', title:'AUTOMATIZE-SE: Resultados que Falam, Futuro que Inspira', presenter:'Yuri Gonzalez Araujo', role:'Diretor de TI', pending:false },
+  { id:15, date:'12/03', time:'18:05', timeEnd:'18:10', mp:'MPBA', title:'Painel de BI da Alfabetização – MPBA', presenter:'Adriano Freire de Carvalho Marques', role:'Promotor de Justiça', pending:false },
+  { id:16, date:'12/03', time:'18:10', timeEnd:'18:15', mp:'MPBA', title:'Aplicativo Cegonha – MPBA', presenter:'Rocío Garcia Matos', role:'Promotora de Justiça', pending:false },
+  { id:17, date:'12/03', time:'18:15', timeEnd:'18:20', mp:'MPBA', title:'IDEA +', presenter:'Otávio de Castro Alla', role:'Coordenador da Coordenação de Organização e Gestão da Informação', pending:false },
+  { id:18, date:'13/03', time:'08:30', timeEnd:'08:35', mp:'MPRS', title:'Pesquisa STJ + Jurimetria – Diagnóstico de Efetividade Recursal', presenter:'João Claudio Pizzato Sidou', role:'Subprocurador-Geral de Justiça de Gestão Estratégica', pending:false },
+  { id:19, date:'13/03', time:'08:35', timeEnd:'08:40', mp:'MPRS', title:'AURORA – Infraestrutura Cognitiva de IA Institucional do MPRS', presenter:'João Claudio Pizzato Sidou', role:'Subprocurador-Geral de Justiça de Gestão Estratégica', pending:false },
+  { id:20, date:'13/03', time:'08:40', timeEnd:'08:45', mp:'MPRS', title:'ALICE (Agentic Law & Intelligence Compliance Engine)', presenter:'João Claudio Pizzato Sidou', role:'Subprocurador-Geral de Justiça de Gestão Estratégica', pending:false },
+  { id:21, date:'13/03', time:'08:45', timeEnd:'08:50', mp:'MPRS', title:'DHALIA (Direitos Humanos Assistidos por IA)', presenter:'João Claudio Pizzato Sidou', role:'Subprocurador-Geral de Justiça de Gestão Estratégica', pending:false },
+  { id:22, date:'13/03', time:'08:50', timeEnd:'08:55', mp:'MPRS', title:'PROJETO ELO (Conectando Solidariedade)', presenter:'João Claudio Pizzato Sidou', role:'Subprocurador-Geral de Justiça de Gestão Estratégica', pending:false },
+  { id:23, date:'13/03', time:'08:55', timeEnd:'09:00', mp:'MPRS', title:'LUPA LGPD', presenter:'João Claudio Pizzato Sidou', role:'Subprocurador-Geral de Justiça de Gestão Estratégica', pending:false },
+  { id:24, date:'13/03', time:'09:00', timeEnd:'09:05', mp:'MPRS', title:'SIGE-MPRS – Sistema Integrado de Gestão Estratégica do MPRS', presenter:'João Claudio Pizzato Sidou', role:'Subprocurador-Geral de Justiça de Gestão Estratégica', pending:false },
+  { id:25, date:'13/03', time:'09:05', timeEnd:'09:15', mp:'MPMS', title:'Área Meio – Nova Ferramenta de Atos e Normas do MP', presenter:'Marco Antonio Vieira de Oliveira', role:'Divisão de Qualidade / Secretaria de Tecnologia da Informação', pending:false },
+  { id:26, date:'13/03', time:'09:15', timeEnd:'09:25', mp:'MPAC', title:'Tecnolog.IA', presenter:'Antonio Anerão', role:'Programador', pending:false },
+  { id:27, date:'13/03', time:'09:25', timeEnd:'09:35', mp:'MPAC', title:'MPAC Lab', presenter:'Antonio Anerão', role:'Programador', pending:false },
+  { id:28, date:'13/03', time:'09:35', timeEnd:'09:45', mp:'LABIIH', title:'Projeto Cadeia de Custódia', presenter:'', role:'', pending:true },
+  { id:29, date:'13/03', time:'09:45', timeEnd:'09:50', mp:'MPGO', title:'Projeto 1', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:30, date:'13/03', time:'09:50', timeEnd:'09:55', mp:'MPGO', title:'Projeto 2', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:31, date:'13/03', time:'09:55', timeEnd:'10:00', mp:'MPGO', title:'Projeto 3', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:32, date:'13/03', time:'10:00', timeEnd:'10:05', mp:'MPGO', title:'Projeto 4', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:33, date:'13/03', time:'10:05', timeEnd:'10:10', mp:'MPGO', title:'Projeto 5', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:34, date:'13/03', time:'10:10', timeEnd:'10:15', mp:'MPGO', title:'Projeto 6', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+];
+
+let currentDateFilter = 'all';
+
+function mpBadgeHTML(mp) {
+  const c = MP_COLORS[mp] || { color:'#94a3b8', bg:'rgba(100,116,139,.1)', border:'rgba(100,116,139,.25)' };
+  return `<span class="mp-badge" style="color:${c.color};background:${c.bg};border-color:${c.border}">
+    <span class="mp-dot" style="background:${c.color}"></span>${mp}
+  </span>`;
+}
+
+function render(data) {
+  const tbody = document.getElementById('table-body');
+  if (!data.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Nenhuma apresentação encontrada para os filtros selecionados.</td></tr>`;
+    document.getElementById('range-info').textContent = '0';
+    document.getElementById('total-info').textContent = '0';
+    document.getElementById('stat-total').textContent = '0';
+    document.getElementById('stat-orgaos').textContent = '0';
+    return;
+  }
+
+  let html = '';
+  let lastDate = '';
+
+  data.forEach(d => {
+    if (d.date !== lastDate) {
+      lastDate = d.date;
+      const label = d.date === '12/03'
+        ? 'Quinta-feira, 12 de março de 2026'
+        : 'Sexta-feira, 13 de março de 2026';
+      const dotColor = d.date === '12/03' ? 'var(--accent)' : 'var(--accent2)';
+      html += `<tr class="date-group">
+        <td colspan="5">
+          <div class="dg-inner">
+            <span class="dg-dot" style="background:${dotColor}"></span>
+            ${label}
+          </div>
+        </td>
+      </tr>`;
+    }
+
+    // Special "Abertura da Mostra" row
+    if (d.opening) {
+      html += `<tr class="row opening-row">
+        <td class="col-num" style="color:var(--accent);font-family:'DM Mono',monospace;font-size:.65rem">—</td>
+        <td class="col-time">
+          <div class="time-block">
+            <span class="time-start">${d.time}</span>
+            <span class="time-end">→ ${d.timeEnd}</span>
+          </div>
+        </td>
+        <td class="col-mp"></td>
+        <td class="col-project" colspan="2">
+          <div class="project-title" style="color:var(--accent);letter-spacing:.04em;font-size:.8rem;text-transform:uppercase">${d.title}</div>
+        </td>
+      </tr>`;
+      return;
+    }
+
+    const presenterBlock = d.pending
+      ? `<div class="presenter-pending">Informações a confirmar</div>`
+      : `<div class="presenter-name">${d.presenter}</div><div class="presenter-role">${d.role}</div>`;
+
+    const mobilePresenter = d.pending
+      ? `<span class="presenter-pending-mobile">Informações a confirmar</span>`
+      : `<span class="project-mobile-presenter"><strong>${d.presenter}</strong>${d.role}</span>`;
+
+    html += `<tr class="row${d.pending ? ' pending' : ''}">
+      <td class="col-num">${String(d.id).padStart(2,'0')}</td>
+      <td class="col-time">
+        <div class="time-block">
+          <span class="time-start">${d.time}</span>
+          <span class="time-end">→ ${d.timeEnd}</span>
+        </div>
+      </td>
+      <td class="col-mp">${mpBadgeHTML(d.mp)}</td>
+      <td class="col-project">
+        <div class="project-title">${d.title}</div>
+        ${mobilePresenter}
+        ${!d.pending ? `<button class="btn-info" onclick="openModal(${d.id},'${d.time}','${d.timeEnd}')">
+          Saiba mais
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </button>` : ''}
+      </td>
+      <td class="col-presenter">${presenterBlock}</td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = html;
+  const presentations = data.filter(d => !d.opening);
+  document.getElementById('range-info').textContent = `1–${presentations.length}`;
+  document.getElementById('total-info').textContent = presentations.length;
+  document.getElementById('stat-total').textContent = presentations.length;
+  const uniqueOrgaos = new Set(presentations.map(d => d.mp)).size;
+  document.getElementById('stat-orgaos').textContent = uniqueOrgaos;
+}
+
+function setDateFilter(val, btn) {
+  currentDateFilter = val;
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b.dataset.filter === val));
+  filterRows();
+}
+
+function filterRows() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const mpVal = document.getElementById('mpSelect').value;
+
+  let result = DATA;
+  if (currentDateFilter !== 'all') result = result.filter(d => (d.opening && currentDateFilter === '12/03') || (!d.opening && d.date === currentDateFilter));
+  if (mpVal !== 'all') result = result.filter(d => d.opening || d.mp === mpVal);
+  if (q) result = result.filter(d => d.opening ||
+    d.title.toLowerCase().includes(q) ||
+    d.mp.toLowerCase().includes(q) ||
+    d.presenter.toLowerCase().includes(q) ||
+    d.role.toLowerCase().includes(q)
+  );
+  render(result);
+}
+
+// Initial render — compute unique organs from full dataset
+document.getElementById('stat-orgaos').textContent = new Set(DATA.filter(d=>!d.opening).map(d => d.mp)).size;
+render(DATA);
+
+/* ── MODAL ── */
+function openModal(id, time, timeEnd) {
+  const d = DATA.find(x => x.id === id);
+  const extra = DESC_MAP[id] || {};
+  if (!d) return;
+
+  document.getElementById('modalInst').textContent  = extra.unit || d.mp;
+  document.getElementById('modalTitle').textContent = d.title;
+  document.getElementById('modalTime').textContent  = `⏱ ${time} → ${timeEnd}`;
+  document.getElementById('modalDesc').textContent  = extra.desc || '—';
+  document.getElementById('modalName').textContent  = d.presenter || '—';
+  document.getElementById('modalRole').textContent  = d.role || '—';
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
