@@ -401,7 +401,6 @@
     <div class="select-wrap">
       <select class="filter-select" id="mpSelect" onchange="filterRows()">
         <option value="all">Todos os órgãos</option>
-        <option value="LABIIH">LABIIH</option>
         <option value="MPAC">MPAC</option>
         <option value="MPBA">MPBA</option>
         <option value="MPGO">MPGO</option>
@@ -487,7 +486,6 @@ const MP_COLORS = {
   MPAC:   { color:'#2dd4bf', bg:'rgba(20,184,166,.1)',  border:'rgba(20,184,166,.25)' },
   MPMS:   { color:'#fb923c', bg:'rgba(249,115,22,.1)',  border:'rgba(249,115,22,.25)' },
   MPGO:   { color:'#4ade80', bg:'rgba(34,197,94,.1)',   border:'rgba(34,197,94,.25)' },
-  LABIIH: { color:'#94a3b8', bg:'rgba(100,116,139,.1)', border:'rgba(100,116,139,.25)' },
 };
 
 /* ── DESCRIÇÕES E UNIDADES (fonte: planilha) ── */
@@ -665,7 +663,7 @@ Outra ferramenta importante é a Anton.IA. Nas suas últimas atualizações ela 
 Utilizando uma infraestrutura baseada em JupyterHub, o MPAC Lab oferece um espaço centralizado que permite a execução de um ambiente interativo de programação, diretamente no navegador, eliminando barreiras técnicas relacionadas à instalação e configuração de ambientes de desenvolvimento.
 
 Isso possibilita que os participantes foquem no aprendizado e na experimentação, trabalhando com linguagens como Python e bibliotecas voltadas à análise de dados, automação e desenvolvimento de sistemas de inteligência artificial.` },
-  28: { unit:`LABIIH (Laboratório de Inovação em Identificação Humana) – PCGO`, desc:`Informações a confirmar.` },
+  28: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
   29: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
   30: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
   31: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
@@ -704,13 +702,13 @@ const DATA = [
   { id:25, date:'13/03', time:'09:05', timeEnd:'09:15', mp:'MPMS', title:'Área Meio – Nova Ferramenta de Atos e Normas do MP', presenter:'Marco Antonio Vieira de Oliveira', role:'Divisão de Qualidade / Secretaria de Tecnologia da Informação', pending:false },
   { id:26, date:'13/03', time:'09:15', timeEnd:'09:25', mp:'MPAC', title:'Tecnolog.IA', presenter:'Antonio Anerão', role:'Programador', pending:false },
   { id:27, date:'13/03', time:'09:25', timeEnd:'09:35', mp:'MPAC', title:'MPAC Lab', presenter:'Antonio Anerão', role:'Programador', pending:false },
-  { id:28, date:'13/03', time:'09:35', timeEnd:'09:45', mp:'LABIIH', title:'Projeto Cadeia de Custódia', presenter:'', role:'', pending:true },
-  { id:29, date:'13/03', time:'09:45', timeEnd:'09:50', mp:'MPGO', title:'Projeto 1', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
-  { id:30, date:'13/03', time:'09:50', timeEnd:'09:55', mp:'MPGO', title:'Projeto 2', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
-  { id:31, date:'13/03', time:'09:55', timeEnd:'10:00', mp:'MPGO', title:'Projeto 3', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
-  { id:32, date:'13/03', time:'10:00', timeEnd:'10:05', mp:'MPGO', title:'Projeto 4', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
-  { id:33, date:'13/03', time:'10:05', timeEnd:'10:10', mp:'MPGO', title:'Projeto 5', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
-  { id:34, date:'13/03', time:'10:10', timeEnd:'10:15', mp:'MPGO', title:'Projeto 6', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:28, date:'13/03', time:'09:35', timeEnd:'09:45', mp:'MPGO', title:'Projeto 1', presenter:'', role:'', pending:true },
+  { id:29, date:'13/03', time:'09:45', timeEnd:'09:50', mp:'MPGO', title:'Projeto 2', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:30, date:'13/03', time:'09:50', timeEnd:'09:55', mp:'MPGO', title:'Projeto 3', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:31, date:'13/03', time:'09:55', timeEnd:'10:00', mp:'MPGO', title:'Projeto 4', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:32, date:'13/03', time:'10:00', timeEnd:'10:05', mp:'MPGO', title:'Projeto 5', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:33, date:'13/03', time:'10:05', timeEnd:'10:10', mp:'MPGO', title:'Projeto 6', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
+  { id:34, date:'13/03', time:'10:10', timeEnd:'10:15', mp:'MPGO', title:'Projeto 7', presenter:'Rafael Correa Costa', role:'Promotor de Justiça e Coordenador do Núcleo de Dados e IA do MPGO', pending:false },
 ];
 
 let currentDateFilter = 'all';
