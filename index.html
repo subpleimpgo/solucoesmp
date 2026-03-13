@@ -274,6 +274,23 @@
   }
   .btn-slides svg { flex-shrink:0; opacity:.7; }
 
+  /* ── BOTÃO APRESENTAÇÃO NO MODAL ── */
+  .btn-modal-slides {
+    display:inline-flex; align-items:center; gap:.5rem;
+    margin-top:1rem; padding:.55rem 1.1rem;
+    border:1px solid rgba(0,229,160,.3);
+    border-radius:8px; font-size:.82rem; font-weight:500;
+    color:var(--accent); text-decoration:none;
+    background:rgba(0,229,160,.06);
+    transition:background .2s, border-color .2s;
+    width:fit-content;
+  }
+  .btn-modal-slides:hover {
+    background:rgba(0,229,160,.15);
+    border-color:rgba(0,229,160,.5);
+  }
+  .btn-modal-slides svg { flex-shrink:0; opacity:.8; }
+
   /* ── MODAL OVERLAY ── */
   .modal-overlay {
     position:fixed; inset:0; z-index:900;
@@ -489,6 +506,11 @@
           <div class="mfi-value" id="modalRole"></div>
         </div>
       </div>
+      <a class="btn-modal-slides" id="modalSlidesBtn" href="#" target="_blank" rel="noopener" style="display:none">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Acessar apresentação
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </a>
     </div>
   </div>
 </div>
@@ -896,6 +918,14 @@ function openModal(id, time, timeEnd) {
   document.getElementById('modalName').textContent  = d.presenter || '—';
   document.getElementById('modalRole').textContent  = d.role || '—';
 
+  const slidesBtn = document.getElementById('modalSlidesBtn');
+  if (LINK_MAP[id]) {
+    slidesBtn.href = LINK_MAP[id];
+    slidesBtn.style.display = 'inline-flex';
+  } else {
+    slidesBtn.style.display = 'none';
+  }
+
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -913,4 +943,3 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 </script>
 </body>
 </html>
-s
