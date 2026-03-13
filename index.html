@@ -238,10 +238,15 @@
   /* hide mobile presenter block on desktop */
   .project-mobile-presenter, .presenter-pending-mobile{display:none}
 
-  /* ── BOTÃO SAIBA MAIS ── */
+  /* ── LINHA DE BOTÕES ── */
+  .btn-row {
+    display:flex; align-items:center; gap:.45rem;
+    flex-wrap:wrap; margin-top:.45rem;
+  }
+
+  /* ── BOTÕES ── */
   .btn-info {
     display:inline-flex; align-items:center; gap:.4rem;
-    margin-top:.45rem;
     padding:.3rem .75rem .3rem .65rem; border-radius:7px;
     border:1px solid rgba(255,255,255,.1);
     background:rgba(255,255,255,.05);
@@ -255,6 +260,19 @@
     color:var(--text);
   }
   .btn-info svg { flex-shrink:0; opacity:.7; }
+
+  /* ── BOTÃO APRESENTAÇÃO ── */
+  .btn-slides {
+    text-decoration:none;
+    border-color:rgba(0,229,160,.25);
+    color:var(--accent);
+  }
+  .btn-slides:hover {
+    background:rgba(0,229,160,.1);
+    border-color:rgba(0,229,160,.4);
+    color:var(--accent);
+  }
+  .btn-slides svg { flex-shrink:0; opacity:.7; }
 
   /* ── MODAL OVERLAY ── */
   .modal-overlay {
@@ -658,19 +676,45 @@ Principais etapas realizadas:
 – Testes e Validação Iterativa: Ciclos com usuários de diferentes unidades, validando redução no tempo de localização de atos relevantes.
 
 Impactos Esperados: Agilidade no ciclo de atos, menor tempo para encontrar documentos demandados no dia a dia, redução de erros interunidades e ferramenta como hub central para eficiência operacional.` },
-  27: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`O ThemisIA é uma plataforma de inteligência artificial generativa desenvolvida para otimizar a análise de processos e a elaboração de peças processuais. O sistema automatiza a extração de dados e a geração de minutas para Autos de Prisão em Flagrante (APF), Inquéritos Policiais (Denúncias) e Ação Penal (Alegações Finais). Conta também com uma aba de Perfis de Escrita, que permite ao usuário submeter seus próprios arquivos para que a IA aprenda e aplique seu estilo redacional e templates personalizados às novas minutas.
+  27: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  28: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  29: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  30: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  31: { unit:`Ministério Público do Estado de Goiás (MPGO) / LABIIH – PCGO`, desc:`Informações a confirmar.` },
+  32: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+  33: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Informações a confirmar.` },
+};
 
-Embora o ThemisIA automatize a redação e ofereça suporte via chat para o refinamento dos textos, a plataforma funciona como uma ferramenta de apoio: o sistema apresenta as informações processuais para que o usuário escolha qual peça será gerada e valide o conteúdo final.` },
-  28: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Ferramenta de IA generativa integrada à interface do sistema Atena, permitindo que membros e servidores interajam diretamente com autos extrajudiciais e administrativos utilizando linguagem natural. O assistente analisa o contexto específico do processo para gerar resumos, localizar evidências, correlacionar dados e responder perguntas complexas, excluindo automaticamente autos sob sigilo para garantir a segurança da informação.` },
-  29: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Plataforma institucional de atendimento automatizado baseada em IA generativa e processamento de linguagem natural. Funciona como um hub onde departamentos (como a CATEP) podem gerenciar suas próprias bases de conhecimento — realizando a ingestão de manuais, normativas e FAQs — para que o assistente virtual responda dúvidas de usuários e forneça orientações específicas de forma autônoma e escalável.` },
-  30: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`O Nexus é uma plataforma institucional desenvolvida para centralizar e integrar a gestão do planejamento estratégico, programas, projetos e planos operacionais do Ministério Público. O sistema substitui fluxos dispersos por um ambiente único de registro e monitoramento, permitindo o acompanhamento de cronogramas, produtos, indicadores e resultados de forma estruturada.
-
-A plataforma é composta por módulos que conectam as iniciativas institucionais aos objetivos estratégicos nacionais e locais, promovendo a padronização e a rastreabilidade das ações. Através de painéis e relatórios gerenciais, o Nexus consolida dados para apoiar a tomada de decisão, ampliar a transparência institucional e facilitar a visualização do impacto das atividades desenvolvidas pelas unidades.` },
-  31: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Plataforma tecnológica destinada a ampliar a capacidade de análise de dados e fortalecer as atividades de apoio à investigação no MPGO.` },
-  32: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`O proprIA é um ecossistema de inteligência artificial especializado na adaptação de modelos de linguagem para a identidade técnica do Ministério Público. O sistema utiliza a metodologia de fine-tuning sobre modelos de grande escala, como o Qwen3, submetendo-os a um treinamento em três fases: adaptação ao domínio jurídico, instrução geral e refinamento especializado por tipo de peça.
-
-O objetivo central do sistema é garantir que a IA não apenas gere textos juridicamente coerentes, mas que incorpore com precisão o estilo redacional, a terminologia e os modelos de documentos reais utilizados pelos promotores. Através de técnicas avançadas de otimização, o proprIA permite o processamento eficiente de milhões de tokens de dados institucionais, resultando em um modelo capaz de produzir minutas personalizadas com alto índice de fidelidade técnica e redução significativa de sinais de escrita automatizada genérica.` },
-  33: { unit:`Ministério Público do Estado de Goiás (MPGO)`, desc:`Solução de OCR avançado e higienização documental. Atua em duas frentes: como ferramenta autônoma para usuários removerem ruídos visuais (marcas, assinaturas) de PDFs e como motor de processamento integrado ao ThemisIA. Recupera o texto de processos com baixa qualidade de digitalização, garantindo a fidelidade dos dados para o consumo pela IA generativa.` },
+/* ── LINKS DAS APRESENTAÇÕES (fonte: planilha, coluna "Compartilhar") ── */
+const LINK_MAP = {
+  1: `https://drive.google.com/drive/folders/1JWPFyuK8Aznk9PN-ZBdt5O3GtLUcVEFP?usp=drive_link`,
+  2: `https://docs.google.com/presentation/d/1gXfoHuMcuVkhPp-Mbu_60Xf5w423bS2h/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  3: `https://docs.google.com/presentation/d/1ty2v_xX3ePM6FW4MD2V0orG3p_hZK4oB/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  4: `https://docs.google.com/presentation/d/1lHMgX53aNhAR9UZfeS6UKiM9NcwzFisl/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  5: `https://drive.google.com/drive/folders/1O1zXtiM0hd4TC7OZ0VQjr1NcmRca3PK2?usp=drive_link`,
+  6: `https://drive.google.com/drive/folders/1jMzvVLrxw8pB2kAFSjqOEN92lSuK2Wwb?usp=drive_link`,
+  7: `https://docs.google.com/presentation/d/1qdJ6Q_WY_jLHoDIb94b20GoWoaippayJMCvloA6dwJE/edit?slide=id.g3cf43bdf12b_0_224`,
+  8: `https://docs.google.com/presentation/d/1qdJ6Q_WY_jLHoDIb94b20GoWoaippayJMCvloA6dwJE/edit?slide=id.g3cf43bdf12b_0_224`,
+  9: `https://docs.google.com/presentation/d/1qx3g_GQZo8uGXj8B3r08AbTzw1EIA2CiCPBuRlUaKzM/edit?slide=id.g3cf43bdf12b_0_224`,
+  10: `https://www.canva.com/design/DAHDi9qWPgE/YXPCWuFMPZZHT2tXDA5AZg/view?utm_content=DAHDi9qWPgE&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hf01ae2ffa6`,
+  11: `https://www.canva.com/design/DAHDmJKHtYQ/ZK2zhj8TpONIMxElN7VUMQ/edit?utm_content=DAHDmJKHtYQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton`,
+  12: `https://www.canva.com/design/DAHDmBN8TJQ/0i59AVKYYR0hhU4Ss9zb-Q/edit?utm_content=DAHDmBN8TJQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton`,
+  13: `https://docs.google.com/presentation/d/1aShWOFA39kZ8gUafufnCmvkLIS08HKgd/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  14: `https://docs.google.com/presentation/d/1kTxQCXlV9yWEj2YTPKGQXRYkNJTmNrmB/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  15: `https://docs.google.com/presentation/d/1glau_C1LZtHUMcQ7mK5uU4T1cIrYQOxq/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  16: `https://docs.google.com/presentation/d/1823v4AeZefcY4qRXXRnwucRE3yFtocLd/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  17: `https://sl.mpac.mp.br/e0bb9`,
+  18: `https://sl.mpac.mp.br/14670`,
+  20: `https://drive.google.com/file/d/1lyLI6oSQCUfOfEfnwju9wThIaNlR-ozJ/view?usp=drive_link`,
+  24: `https://drive.google.com/file/d/1XjvB9Povr6pQS7LBGfJ-J23uFJVIX-wb/view?usp=drive_link`,
+  26: `https://docs.google.com/presentation/d/1BeM_Q1jjrB4kps-QcKQ7imRCSh7DpTJh/edit?usp=drive_link&ouid=113439992558143848061&rtpof=true&sd=true`,
+  27: `https://www.canva.com/design/DAHDpQir-do/KZlIgYNGewYSciTWbk-dhw/view?utm_content=DAHDpQir-do&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5ee906c8b9`,
+  28: `https://www.canva.com/design/DAHDpQir-do/KZlIgYNGewYSciTWbk-dhw/view?utm_content=DAHDpQir-do&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5ee906c8b9`,
+  29: `https://www.canva.com/design/DAHDpQir-do/KZlIgYNGewYSciTWbk-dhw/view?utm_content=DAHDpQir-do&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5ee906c8b9`,
+  30: `https://www.canva.com/design/DAHDpQir-do/KZlIgYNGewYSciTWbk-dhw/view?utm_content=DAHDpQir-do&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5ee906c8b9`,
+  31: `https://www.canva.com/design/DAHDpQir-do/KZlIgYNGewYSciTWbk-dhw/view?utm_content=DAHDpQir-do&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5ee906c8b9`,
+  32: `https://www.canva.com/design/DAHDpQir-do/KZlIgYNGewYSciTWbk-dhw/view?utm_content=DAHDpQir-do&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5ee906c8b9`,
+  33: `https://www.canva.com/design/DAHDpQir-do/KZlIgYNGewYSciTWbk-dhw/view?utm_content=DAHDpQir-do&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5ee906c8b9`,
 };
 
 const DATA = [
@@ -788,10 +832,17 @@ function render(data) {
       <td class="col-project">
         <div class="project-title">${d.title}</div>
         ${mobilePresenter}
+        <div class="btn-row">
         ${!d.pending ? `<button class="btn-info" onclick="openModal(${d.id},'${d.time}','${d.timeEnd}')">
-          Saiba mais
+          Ver descrição
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
         </button>` : ''}
+        ${LINK_MAP[d.id] ? `<a class="btn-info btn-slides" href="${LINK_MAP[d.id]}" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Acessar apresentação
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>` : ''}
+        </div>
       </td>
       <td class="col-presenter">${presenterBlock}</td>
     </tr>`;
@@ -862,3 +913,4 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 </script>
 </body>
 </html>
+s
